@@ -5,7 +5,8 @@
 findFirstAndSecondBestTripleeMatches <- function( voterFile=RichlandVoterFile, 
                                            TriplersSS, oneDateSheet ) {
   
-  load(file="allNicknames.rdata",verbose=TRUE)
+  load(file=file.path(data_directory,"allNicknames.rdata"),verbose=TRUE)
+  
   
   # triplers = read_sheet( ss=TriplersSS, sheet=oneDateSheet, skip=1)
   triplers = read_sheet( ss=TriplersSS, sheet=oneDateSheet, skip=1)
@@ -22,15 +23,11 @@ findFirstAndSecondBestTripleeMatches <- function( voterFile=RichlandVoterFile,
     dplyr::rename( Name.First = First1)  %>% dplyr::rename( Name.Last = Last1) %>% 
     dplyr::rename( Name.Middle = MI1)  %>% dplyr::rename( Name.Suffix = Suffix1)
   
-  browser()
-  
   matchedFriends1 = matchTripleesToVoterFile (namesToMatch=triplees1, masterList=voterFile, allNicknames=allNicknames, 
                                               IDfield="TriplerID", voterFileID="SOS_VOTERID" ) %>% 
     dplyr::rename( triplee.Last = Name.Last )%>%   dplyr::rename( triplee.First = Name.First ) 
   
-  
-  browser()
-  tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First2", "Last2","MI2","Suffix2" )
+    tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First2", "Last2","MI2","Suffix2" )
   triplees2 = triplers[,tripleeCommonColnames ] %>%  dplyr::rename( Tripler.First = Name.First )  %>% dplyr::rename( Tripler.Last = Name.Last ) %>%
     dplyr::rename( Name.First = First2)  %>% dplyr::rename( Name.Last = Last2) %>% 
     dplyr::rename( Name.Middle = MI2)  %>% dplyr::rename( Name.Suffix = Suffix2)
@@ -53,7 +50,6 @@ findFirstAndSecondBestTripleeMatches <- function( voterFile=RichlandVoterFile,
   allMatchedTriplees = rbind( matchedFriends1, matchedFriends2, matchedFriends3  )
   # allMatchedTriplees %<>% select( -check2ndAddress ) %>% select( -checkAddress)
  
-  browser()
   write_sheet_nice(allMatchedTriplees,  ss=TriplersSS, sheet=paste(oneDateSheet,"triplees") ) 
   
   

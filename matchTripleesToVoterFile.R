@@ -92,7 +92,6 @@ matchTripleesToVoterFile <- function(namesToMatch, masterList, allNicknames,
 
   colsToWrite = c("TriplerIDout", "Tripler.First", "Tripler.Last", "Name.First", "Name.Middle","Name.Last","Name.Suffix","bestTripleeID","NameAgeAddress" , "WARD","correctVoter" ,"secondTripleeID","SecondNameAgeAddress","ward2ndVoter","correct2ndVoter" )
   
-  browser()
   return <- IDandBestNatches[,colsToWrite]
 }
 
