@@ -62,7 +62,7 @@ matchTripleesToVoterFile <- function(namesToMatch, masterList, allNicknames,
   
   colNamesToSave = intersect( c(     "TriplerIDout" , "SOS_VOTERID"  , "Name.First"  ,     "Name.Last"  , "Name.Middle" , "Name.Suffix" , 
                                      "FIRST_NAME"    , "LAST_NAME" , "MIDDLE_NAME", "SUFFIX", "streetNumber"   , "Street name"  ,
-                                     "NameAgeAddress"  ,  "WARD"    ,    "nameAndAddressScore"  , 
+                                     "NameAgeAddress"  ,  "PRECINCT_NAME"    ,    "nameAndAddressScore"  , 
                                      "totalScore", "firstNameScore" , "lastNameScore"  ,
                                      "houseNumMatch"  , "streetNameMatch"  ,    "addressScore"  ,
                                      "BirthMatchScore"            ,      "nameAndBirthScore"   ,       
@@ -80,18 +80,19 @@ matchTripleesToVoterFile <- function(namesToMatch, masterList, allNicknames,
   secondBestMatch %<>% dplyr::rename( SecondNameAgeAddress = NameAgeAddress )
   secondBestMatch %<>% dplyr::rename( check2ndAddress = checkAddress )
   secondBestMatch %<>% dplyr::rename( correct2ndVoter = correctVoter )
-  secondBestMatch %<>% dplyr::rename(  ward2ndVoter = WARD )
+  # secondBestMatch %<>% dplyr::rename(  ward2ndVoter = WARD )
   
   #
   # Now create the first four columns to add and use range_write() 
   #
-  IDandBestNatch = merge( namesToMatch[which(!is.na(namesToMatch$Name.First)),c("TriplerID", "Tripler.First", "Tripler.Last","Name.First", "Name.Middle","Name.Last","Name.Suffix")], bestMatches[,c("TriplerID","bestTripleeID","NameAgeAddress","checkAddress","WARD","correctVoter")], by="TriplerID", all.x=TRUE )
-  IDandBestNatches = merge( IDandBestNatch, secondBestMatch[,c("TriplerID","secondTripleeID","SecondNameAgeAddress","check2ndAddress","ward2ndVoter","correct2ndVoter")], by="TriplerID", all.x=TRUE )
+  IDandBestNatch = merge( namesToMatch[which(!is.na(namesToMatch$Name.First)),c("TriplerID", "Tripler.First", "Tripler.Last","Name.First", "Name.Middle","Name.Last","Name.Suffix")], bestMatches[,c("TriplerID","bestTripleeID","NameAgeAddress","checkAddress","PRECINCT_NAME","correctVoter")], by="TriplerID", all.x=TRUE )
+  IDandBestNatches = merge( IDandBestNatch, secondBestMatch[,c("TriplerID","secondTripleeID","SecondNameAgeAddress","check2ndAddress","correct2ndVoter")], by="TriplerID", all.x=TRUE )
   
   IDandBestNatches %<>% dplyr::rename( TriplerIDout = TriplerID )
 
-  colsToWrite = c("TriplerIDout", "Tripler.First", "Tripler.Last", "Name.First", "Name.Middle","Name.Last","Name.Suffix","bestTripleeID","NameAgeAddress" , "WARD","correctVoter" ,"secondTripleeID","SecondNameAgeAddress","ward2ndVoter","correct2ndVoter" )
+  colsToWrite = c("TriplerIDout", "Tripler.First", "Tripler.Last", "Name.First", "Name.Middle","Name.Last","Name.Suffix","bestTripleeID","NameAgeAddress" , "PRECINCT_NAME","correctVoter" ,"secondTripleeID","SecondNameAgeAddress","correct2ndVoter" )
   
+  # browser()
   return <- IDandBestNatches[,colsToWrite]
 }
 
