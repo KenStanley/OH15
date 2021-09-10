@@ -148,8 +148,8 @@ triplersWithNewTriplers = merge( triplers,
 newTriplers = which(triplersWithNewTriplers$new) 
 triplersWithNewTriplers$TriplerSosId[newTriplers] = triplersWithNewTriplers$SOS_VOTERID[newTriplers]
 triplersWithNewTriplers$Precinct[newTriplers] = triplersWithNewTriplers$PRECINCT_NAME[newTriplers]
-triplersWithNewTriplers$NameAgeAddress[newTriplers] = triplersWithNewTriplers$NameAgeAddressNew[newTriplers]
-triplersWithNewTriplers$SecondNameAgeAddress[newTriplers] = triplersWithNewTriplers$SecondNameAgeAddressNew[newTriplers]
+triplersWithNewTriplers$Triplee1.in.voter.database[newTriplers] = triplersWithNewTriplers$NameAgeAddressNew[newTriplers]
+triplersWithNewTriplers$SecondTripler[newTriplers] = triplersWithNewTriplers$SecondNameAgeAddressNew[newTriplers]
 
 # triplersWithNewTriplers$newTriplerID = !is.na(triplersWithNewTriplers)
 
@@ -171,6 +171,8 @@ triplersWithNewTriplersAndTriplees = merge( triplersWithNewTriplers,
 
 
 newTriplers = which(triplersWithNewTriplersAndTriplees$new) 
+
+triplersWithNewTriplersAndTriplees$Tripler.in.voter.database[newTriplers] = triplersWithNewTriplersAndTriplees$NameAgeAddress[newTriplers]
 
 triplersWithNewTriplersAndTriplees$Triplee1ID[newTriplers] = triplersWithNewTriplersAndTriplees$Triplee1IDNew[newTriplers]
 triplersWithNewTriplersAndTriplees$Triplee1.in.voter.database[newTriplers] = triplersWithNewTriplersAndTriplees$Triplee1.in.voter.databaseNew[newTriplers]

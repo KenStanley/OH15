@@ -52,7 +52,7 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   
   otherMatches = anti_join(matchedFriends,bestMatches, by=c("SOS_VOTERID" ,    "TriplerID") ) %>%
     filter( totalScoreRand <= minTotalScore * 10000 & 
-              totalScoreRand < 10 )
+              totalScoreRand < 100 )
   
   # View(matchedFriends[,c("SOS_VOTERID" , "LAST_NAME"  ,"Name.Last"   ,
   #                        "FIRST_NAME" ,"Name.First" ,  "MIDDLE_NAME"   , "Name.Middle"    , "TriplerID"   ,"totalScoreRand")])
@@ -84,7 +84,7 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
                                      "Name.First","FIRST_NAME",
                                      "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore"),
                                    colnames(bestMatches) )
-  # View( bestMatches[,interestingColumns])
+  View( bestMatches[,interestingColumns])
   
   
   iCmatchedFriends =  intersect( c("SOS_VOTERID" ,    "TriplerID" , "nameAndAddressScore",
@@ -103,18 +103,19 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   secondBestMatch %<>% dplyr::rename( SecondNameAgeAddressNew = NameAgeAddressNew )
   secondBestMatch %<>% dplyr::rename( check2ndAddress = checkAddress )
   secondBestMatch %<>% dplyr::rename( correct2ndVoter = correctVoter )
-  secondBestMatch %<>% dplyr::rename( ward2ndVoter = WARD )
+  secondBestMatch %<>% dplyr::rename( precinct2ndVoter = PRECINCT_NAME )
   
   #
   # Now create the first four columns to add and use range_write() 
   #
   
-  IDandBestNatch = merge( triplers[,c("TriplerID","Name.First")], bestMatches[,c("TriplerID","BEST_VOTERID","NameAgeAddressNew","checkAddress","correctVoter","WARD")], by="TriplerID", all.x=TRUE )
-  IDandBestMatches = merge( IDandBestNatch, secondBestMatch[,c("TriplerID","SECOND_VOTERID","SecondNameAgeAddressNew","check2ndAddress","correct2ndVoter","ward2ndVoter")], by="TriplerID", all.x=TRUE )
+  IDandBestMatch = merge( triplers[,c("TriplerID","Name.First")], bestMatches[,c("TriplerID","BEST_VOTERID","NameAgeAddressNew","checkAddress","correctVoter","PRECINCT_NAME")], by="TriplerID", all=TRUE )
+  
+  IDandBestMatches = merge( IDandBestMatch, secondBestMatch[,c("TriplerID","SECOND_VOTERID","SecondNameAgeAddressNew","check2ndAddress","correct2ndVoter","precinct2ndVoter")], by="TriplerID", all=TRUE )
   
   # IDandBestMatches %<>% dplyr::rename( TriplerIDout = TriplerID )
   
-  # colsToWrite = c("TriplerIDout", "SECOND_VOTERID","SecondNameAgeAddressNew","check2ndAddress","ward2ndVoter","correct2ndVoter","BEST_VOTERID","NameAgeAddressNew" ,"checkAddress", "WARD","correctVoter" )
+  # colsToWrite = c("TriplerIDout", "SECOND_VOTERID","SecondNameAgeAddressNew","check2ndAddress","precinct2ndVoter","correct2ndVoter","BEST_VOTERID","NameAgeAddressNew" ,"checkAddress", "WARD","correctVoter" )
   # 
   # range_write( IDandBestMatches[,colsToWrite],ss=TriplersSS, sheet=oneDateSheet, range="A2", col_names = TRUE)
   
@@ -126,7 +127,8 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   colsToReturn = c("TriplerID","SOS_VOTERID","NameAgeAddressNew", 
                    "PRECINCT_NAME", "SecondNameAgeAddressNew")
   
-  return <- IDandWard[, c(colsToReturn )]
+  IDandBestMatches %<>% dplyr::rename( SOS_VOTERID = BEST_VOTERID)
+  return <- IDandBestMatches[, c(colsToReturn )]
   
   
 }

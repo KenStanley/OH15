@@ -60,7 +60,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
   middleInitialMatchScore = .1 
   minimumFactorToNextScore = 4 
   maximumScore = 5 
-  lastNamePenalty = 103 # A penalty of 1 is generally enough as we count on a 
+  lastNamePenalty = 13 # A penalty of 1 is generally enough as we count on a 
   # last name and a first name match in most cases. 
   # The only time that a last name mismatch makes sense
   # is when someone has changed their name (typically through marriage)

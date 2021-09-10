@@ -241,7 +241,7 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   
   if (is.na(houseNumField)) {
     allmatches = distinct(matchesWithoutAddresses)
-    
+
   } else { 
     
     
@@ -257,6 +257,8 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
                                      by.x=c( "Name.Last",houseNumField ),
                                      by.y=c("LAST_NAME","streetNum"))[,c(IDfield,voterFileID)]
     
+    justTheFirstNamesMaam = merge( firstAndStreetNumberMatch, masterList[,c(1,4:7,11:13)], by="SOS_VOTERID")
+    justTheNamesMaam = merge( lastAndStreetNumberMatch, masterList[,c(1,4:7,11:13)], by="SOS_VOTERID")
     
     firstAndStreetNameMatch = merge(namesToMatch,masterList,
                                     by.x=c( "Name.First",streetNameField ),
@@ -357,7 +359,6 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   
   bestScoresbySOS = group_by_at( bestMatchesForeachID, vars(one_of(c(voterFileID))) )  %>% summarize(     minTotalScoreBySOS=min(totalScoreRand))
   
-  
   bestMatchesBySOS = merge(bestMatchesForeachID,bestScoresbySOS,
                            by=voterFileID)
   
@@ -370,7 +371,6 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   }
   
   
-  if  ( nrow(bestMatchesByBoth)<3 ) browser() 
   
   bestMatchesByBoth$registeredToVote = FALSE 
   
