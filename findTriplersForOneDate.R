@@ -16,6 +16,7 @@ library(magrittr)
 
 recreateVoterFile = FALSE 
 tic()
+tic()
 if ( recreateVoterFile ) {
   
   rm( list=ls())
@@ -83,8 +84,18 @@ tic()
 clearData = FALSE
 if ( clearData ) {
   rm ( list=ls())
+  source("directory_path.R")
+  library(dplyr)
+  library(tictoc)
+  library(magrittr)
+  smallEqualsFast = TRUE 
+  if (smallEqualsFast) {
+    load(file="SmallerVoterFile.rds",verbose = TRUE)
+    FranklinVoterFile=SmallerVoterFile
+  } else {
+    load(file="FranklinVoterFile.rds",verbose = TRUE)
+  }
   
-  load(file="FranklinVoterFile.rds",verbose = TRUE)
   toc()
   tic()
 }
@@ -130,8 +141,11 @@ expectedColumns = c(  "TriplerID"  ,  "Date",         "Canvass.Precinct"
                       "SecondTriplee3"        )
 
 stopifnot( setequal( expectedColumns, colnames(triplers )))
+setdiff( expectedColumns, colnames(triplers ))
+setdiff( colnames(triplers ), expectedColumns)
 
-triplers$new = is.na(triplers$TriplerSosId)
+
+triplers$new = is.na(triplers$Tripler.in.voter.database) | ( nchar(triplers$Tripler.in.voter.database) < 5 ) 
 triplersOut = findFirstAndSecondBestMatches( allNicknames=allNicknames, 
                                              voterFile=FranklinVoterFile,
                                              triplers = triplers [which(triplers$new),])
@@ -193,9 +207,20 @@ setdiff( triplerColumns, colnames( triplersWithNewTriplersAndTriplees) )
 setdiff(  colnames( triplersWithNewTriplersAndTriplees), triplerColumns )
 
 
-browser()
-write_sheet_nice(triplersWithNewTriplersAndTriplees[,expectedColumns], 
-                 ss=TriplersSS, sheet=thisDateSheet)
+lastColumnInFirstSet = 13
+FirstRange= "A1"
+firstColumnInSecondSet = 19
+SecondRange= "S1"
+# 
+#    There is nothing here that we need to update 
+#
+# range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[1:lastColumnInFirstSet]], 
+#                  ss=TriplersSS, sheet=thisDateSheet, range=FirstRange, col_names=TRUE)
 
 
+range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
+                 ss=TriplersSS, sheet=thisDateSheet, range=SecondRange, col_names=TRUE)
+
+
+toc()
 toc()

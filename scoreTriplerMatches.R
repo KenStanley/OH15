@@ -453,6 +453,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
                                      "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore"),
                                    colnames(nameMatches) ) 
   
+  # browser()
   # View( nameMatches[,interestingColumns])
   return <- nameMatches
 }

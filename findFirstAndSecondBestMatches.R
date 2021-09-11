@@ -84,7 +84,7 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
                                      "Name.First","FIRST_NAME",
                                      "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore"),
                                    colnames(bestMatches) )
-  View( bestMatches[,interestingColumns])
+  # View( bestMatches[,interestingColumns])
   
   
   iCmatchedFriends =  intersect( c("SOS_VOTERID" ,    "TriplerID" , "nameAndAddressScore",

@@ -61,7 +61,7 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   if( !is.na(houseNumField)) stopifnot( (houseNumField %in% colnames(namesToMatch)) )
   
   stopifnot( (IDfield %in% colnames(namesToMatch)) )
-  stopifnot( nrow(unique(namesToMatch[,IDfield])) > 3 ) # Could the IDfield be empty?
+  # stopifnot( nrow(unique(namesToMatch[,IDfield])) > 3 ) # Could the IDfield be empty?
   # stopifnot( length(masterList[,voterFileID])==nrow(masterList))
   
   
@@ -97,7 +97,7 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   # toc(quiet=FALSE) 
   
   # 
-
+  
   colnames(namesToMatch)
   if ( "FIRST_NAME" %in% colnames( namesToMatch)) {
     namesToMatch = namesToMatch %>% dplyr::rename( Name.First = FIRST_NAME)
@@ -241,7 +241,7 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
   
   if (is.na(houseNumField)) {
     allmatches = distinct(matchesWithoutAddresses)
-
+    
   } else { 
     
     
