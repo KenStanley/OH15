@@ -55,6 +55,8 @@ matchTripleesToVoterFile <- function(namesToMatch, masterList, allNicknames,
     
     bestMatches = matchedFriends %>% filter( totalScoreRand == minTotalScore & totalScoreRand < 10 )
     
+    Oh15 = bestMatches$CONGRESSIONAL_DISTRICT == 15
+    bestMatches$PRECINCT_NAME[ which(!Oh15)] = tolower(bestMatches$PRECINCT_NAME[ which(!Oh15)] )
     otherMatches = anti_join(matchedFriends,bestMatches, by=c("SOS_VOTERID" ,    "TriplerID") ) %>%
       filter( totalScoreRand <= minTotalScore * 1000 & 
                 totalScoreRand < 100 )
