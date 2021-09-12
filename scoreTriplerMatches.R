@@ -211,9 +211,10 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     nameMatches$lastNameScore[which(nameMatches$LAST_NAME != nameMatches$Name.Last)] = lastNameMismatchScore 
     
     interestingColumns = c(  "Name.First", "FIRST_NAME" ,"Name.Last", "LAST_NAME",   "Name.Middle",  "MIDDLE_NAME"  , 
+                             "middleNameScore", 
                              "firstNameScore"  ,      "lastNameScore"  ,   "SOS_VOTERID",
                             "TriplerID"  )
-    View(nameMatches[,interestingColumns])
+    # View(nameMatches[,interestingColumns])
     #
     #  This is irrelevant because the nickname score is always 10 - not true when 
     #  nickname checking is turned on - But I fixed this above line 210 "= firstNameMismatchScore"
@@ -244,6 +245,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
                                (nchar(as.character(nameMatches$MIDDLE_NAME))>1)) 
     # stopifnot(sum(fullMiddleNamesOnBoth)==0) # The following code is untested for now 
     
+    # View( nameMatches[middleInitialsOnBoth,interestingColumns])
     nameMatches$middleNameScore[ which(fullMiddleNamesOnBoth & 
                                          (nameMatches$Name.Middle==nameMatches$MIDDLE_NAME))] = middleNameFullMatchScore
     
@@ -463,10 +465,10 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     
     # View( nameMatches[,interestingColumns])
 
-    interestingColumns = c(  "Name.First", "FIRST_NAME" ,"Name.Last", "LAST_NAME",   "Name.Middle",  "MIDDLE_NAME"  , 
-                             "firstNameScore"  ,      "lastNameScore"  ,   "SOS_VOTERID",
+    interestingColumns = c(  "Name.First", "FIRST_NAME" ,"Name.Last", "LAST_NAME",   "Name.Middle",  "MIDDLE_NAME"  , "middleNameScore", 
+                             "firstNameScore"  ,      "lastNameScore"  , "nameAndBirthScore",  "SOS_VOTERID",
                              "TriplerID"  )
-    View(nameMatches[,interestingColumns])
+    # View(nameMatches[,interestingColumns])
     return <- nameMatches
     
   } else {

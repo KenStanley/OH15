@@ -334,7 +334,10 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
     
     allMatchesWithScores$totalScore = allMatchesWithScores$nameAndBirthScore * allMatchesWithScores$addressScore
     
+    intCols = intersect( interestingColumns, colnames( allMatchesWithScores))
     
+    # View(allMatchesWithScores[,c(intCols,"totalScore")])
+    # browser()
     
     
     allMatchesWithScores$totalScoreRand = allMatchesWithScores$totalScore * (1 + (1:nrow(allMatchesWithScores))/1e15)

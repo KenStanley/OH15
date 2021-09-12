@@ -31,7 +31,9 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
                                              facebook=FALSE,
                                              cutoffScore=1e10) 
   
-  
+  cutoffScoreToIncludeInTheTopList = 0.25 
+  cutoffScoreToIncludeInTheSecondaryList = 100 
+  cutoffMultiple = 1000 
   
   June30_2021 = as.Date("2021-06-30")
   matchedFriends$age =   floor( as.integer(June30_2021  - as.Date(matchedFriends[,"DATE_OF_BIRTH"]))  / 365.25 )
@@ -48,11 +50,12 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   matchedFriends$correctVoter = ""
   matchedFriends$checkAddress[matchedFriends$addressScore > .05] = "Check Addr"
   
-  bestMatches = matchedFriends %>% filter( totalScoreRand == minTotalScore & totalScoreRand < 0.1 )
+  bestMatches = matchedFriends %>% filter( totalScoreRand == minTotalScore & totalScoreRand < cutoffScoreToIncludeInTheTopList )
+  
   
   otherMatches = anti_join(matchedFriends,bestMatches, by=c("SOS_VOTERID" ,    "TriplerID") ) %>%
-    filter( totalScoreRand <= minTotalScore * 10000 & 
-              totalScoreRand < 100 )
+    filter( totalScoreRand <= minTotalScore * cutoffMultiple & 
+              totalScoreRand < cutoffScoreToIncludeInTheSecondaryList )
   
   # View(matchedFriends[,c("SOS_VOTERID" , "LAST_NAME"  ,"Name.Last"   ,
   #                        "FIRST_NAME" ,"Name.First" ,  "MIDDLE_NAME"   , "Name.Middle"    , "TriplerID"   ,"totalScoreRand")])
