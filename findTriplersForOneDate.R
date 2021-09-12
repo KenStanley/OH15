@@ -81,7 +81,7 @@ if ( recreateVoterFile ) {
 toc()
 tic()
 
-clearData = FALSE
+clearData = TRUE
 if ( clearData ) {
   rm ( list=ls())
   source("directory_path.R")
@@ -119,6 +119,10 @@ load(file=file.path(data_directory,"allNicknames.rdata"),verbose=TRUE)
 
 triplers = read_sheet_nice( ss=TriplersSS, sheet=thisDateSheet, skip=0)
 
+triplers %<>% filter( !is.na(TriplerID))
+
+stopifnot( length( unique(triplers$TriplerID)) == nrow(triplers))
+
 toc()
 
 tic()
@@ -150,7 +154,6 @@ triplersOut = findFirstAndSecondBestMatches( allNicknames=allNicknames,
                                              voterFile=FranklinVoterFile,
                                              triplers = triplers [which(triplers$new),])
 
-
 triplerColumns = colnames(triplers )
 
 intersect( colnames( triplers), colnames( triplersOut))
@@ -159,6 +162,8 @@ triplersWithNewTriplers = merge( triplers,
                                  triplersOut, 
                                  by="TriplerID", all.x=TRUE)
 
+stopifnot( nrow(triplersWithNewTriplers) == nrow( triplers))
+
 newTriplers = which(triplersWithNewTriplers$new) 
 triplersWithNewTriplers$TriplerSosId[newTriplers] = triplersWithNewTriplers$SOS_VOTERID[newTriplers]
 triplersWithNewTriplers$Precinct[newTriplers] = triplersWithNewTriplers$PRECINCT_NAME[newTriplers]
@@ -166,7 +171,6 @@ triplersWithNewTriplers$Triplee1.in.voter.database[newTriplers] = triplersWithNe
 triplersWithNewTriplers$SecondTripler[newTriplers] = triplersWithNewTriplers$SecondNameAgeAddressNew[newTriplers]
 
 # triplersWithNewTriplers$newTriplerID = !is.na(triplersWithNewTriplers)
-
 toc()
 
 source("findFirstAndSecondBestTripleeMatches.R")
@@ -182,6 +186,7 @@ triplersWithNewTriplersAndTriplees = merge( triplersWithNewTriplers,
                                             tripleeMatches, 
                                             by.x="TriplerID", by.y="TriplerIDout",all.x=TRUE)
 
+stopifnot( nrow(triplersWithNewTriplers) == nrow( triplersWithNewTriplersAndTriplees))
 
 
 newTriplers = which(triplersWithNewTriplersAndTriplees$new) 
@@ -207,19 +212,19 @@ setdiff( triplerColumns, colnames( triplersWithNewTriplersAndTriplees) )
 setdiff(  colnames( triplersWithNewTriplersAndTriplees), triplerColumns )
 
 
-lastColumnInFirstSet = 13
-FirstRange= "A1"
+# lastColumnInFirstSet = 13
+# FirstRange= "A3"
 firstColumnInSecondSet = 19
-SecondRange= "S1"
+SecondRange= "S3"
 # 
 #    There is nothing here that we need to update 
 #
 # range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[1:lastColumnInFirstSet]], 
 #                  ss=TriplersSS, sheet=thisDateSheet, range=FirstRange, col_names=TRUE)
 
-
-range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
-                 ss=TriplersSS, sheet=thisDateSheet, range=SecondRange, col_names=TRUE)
+browser()
+range_write_nice(triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
+                 ss=TriplersSS, sheet=thisDateSheet, range=SecondRange, col_names=FALSE)
 
 
 toc()

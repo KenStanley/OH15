@@ -109,9 +109,13 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   # Now create the first four columns to add and use range_write() 
   #
   
-  IDandBestMatch = merge( triplers[,c("TriplerID","Name.First")], bestMatches[,c("TriplerID","BEST_VOTERID","NameAgeAddressNew","checkAddress","correctVoter","PRECINCT_NAME")], by="TriplerID", all=TRUE )
+  IDandBestMatch = merge( triplers[,c("TriplerID","Name.First")], bestMatches[,c("TriplerID","BEST_VOTERID","NameAgeAddressNew","checkAddress","correctVoter","PRECINCT_NAME","CONGRESSIONAL_DISTRICT")], by="TriplerID", all=TRUE )
   
   IDandBestMatches = merge( IDandBestMatch, secondBestMatch[,c("TriplerID","SECOND_VOTERID","SecondNameAgeAddressNew","check2ndAddress","correct2ndVoter","precinct2ndVoter")], by="TriplerID", all=TRUE )
+  
+  inOH15 = IDandBestMatches$CONGRESSIONAL_DISTRICT == 15
+  
+  IDandBestMatches$PRECINCT_NAME[which(!inOH15)] = tolower(IDandBestMatches$PRECINCT_NAME[which(!inOH15)] )
   
   # IDandBestMatches %<>% dplyr::rename( TriplerIDout = TriplerID )
   
@@ -121,13 +125,17 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
   
   colsToReturn = c("TriplerID","BEST_VOTERID","NameAgeAddressNew", "SecondNameAgeAddressNew")
   
-  IDandWard = merge( voterFile[  , c("SOS_VOTERID", "PRECINCT_NAME" )], IDandBestMatches[, colsToReturn], by.x="SOS_VOTERID",
-                     by.y="BEST_VOTERID")
   
+  # OK the issue here is that we don't have anything to ' compare - blank out some in the google spreadsheet to win 
+  # browser()
+  # IDandWard = merge( voterFile[  , c("SOS_VOTERID", "PRECINCT_NAME", "CONGRESSIONAL_DISTRICT" )], IDandBestMatches[, colsToReturn], by.x="SOS_VOTERID",
+  #                    by.y="BEST_VOTERID")
+ 
   colsToReturn = c("TriplerID","SOS_VOTERID","NameAgeAddressNew", 
                    "PRECINCT_NAME", "SecondNameAgeAddressNew")
   
   IDandBestMatches %<>% dplyr::rename( SOS_VOTERID = BEST_VOTERID)
+  
   return <- IDandBestMatches[, c(colsToReturn )]
   
   
