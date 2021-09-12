@@ -50,27 +50,28 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     
     firstNameMismatchScore = 10 # We already get penalized for not getting a low name match score 
     middleNameMismatchScore = 9.87 
-    
+    lastNameMismatchScore = 13 # A penalty of 1 is generally enough as we count on a 
+    # last name and a first name match in most cases. 
+    # The only time that a last name mismatch makes sense
+    # is when someone has changed their name (typically through marriage)
+    # firstNamePenalty = 10 - use firstNameMismatchScore instead 
+    failedMiddleNameMatchPenalty = 9.23 # A few women may use a maiden name in some circs and a middle name in others, 
+    # but that is a small number and the false positive rate does not justify reducing false negatives 
+    middleNameFullMatchScore = .01 
+    middleInitialMatchScore = .1 
     BirthYearMismatchPenalty = 101 # 7 or more years difference - don't trust this 100% 
     BirthYear3to6yearMismatchPenalty = 5 
     BirthYear2yearMismatchPenalty = .5 # Not really a penalty 
     BirthYear1yearMismatchPenalty = .1 # Not really a penalty 
     
-    failedMiddleNameMatchPenalty = 9.23 # A few women may use a maiden name in some circs and a middle name in others, 
-    # but that is a small number and the false positive rate does not justify reducing false negatives 
-    middleNameFullMatchScore = .01 
-    middleInitialMatchScore = .1 
-    minimumFactorToNextScore = 4 
-    maximumScore = 5 
-    lastNamePenalty = 13 # A penalty of 1 is generally enough as we count on a 
-    # last name and a first name match in most cases. 
-    # The only time that a last name mismatch makes sense
-    # is when someone has changed their name (typically through marriage)
-    firstNamePenalty = 10 
+
+    # minimumFactorToNextScore = 4 
+    # maximumScore = 5 
     
     #
     #  We score first and last names based on how common they are 
     #
+    tic()
     firstNameScore = voterFile %>% 
       group_by(voterFile$FIRST_NAME) %>%
       summarise(firstNameScore=n() ) 
@@ -86,21 +87,22 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     
     lastNameScore$lastNameScore = lastNameScore$lastNameScore / nrow(voterFile)
     colnames(lastNameScore)[1]="LAST_NAME"
-    
+    toc()
+    print("that was how long it took to compute the first and last name scores")
     
     
     if (! ("Name.First" %in% colnames(namesToMatch))) browser()
     if (MatchNicknames & ("AlternateName" %in% colnames(allNicknames))) {
       
-      browser()
       nicknameMatch = merge( namesToMatch, allNicknames, by.x="Name.First", by.y="AlternateName")
       nicknameMatchToVoterFile = merge( nicknameMatch, voterFile, by.x="value", by.y="FIRST_NAME") 
-      nicknameMatches = merge(nicknameMatchToVoterFile,allmatches) 
-      nicknameMatches$nickNameScore = nicknameScore
+      allmatchesPlusNicknameScore = allmatches
+      allmatchesPlusNicknameScore$nickNameScore = nicknameScore
       
+      nicknameMatches = merge(nicknameMatchToVoterFile,allmatchesPlusNicknameScore) 
+
       intersect(colnames(nicknameMatchToVoterFile), colnames(allmatches))
       
-      browser()
       nicknameToMiddleMatch = merge( namesToMatch, allNicknames, by.x="Name.First", by.y="AlternateName")
       nicknameToMiddleMatchToVoterFile = merge( nicknameToMiddleMatch, voterFile, by.x="value", by.y="MIDDLE_NAME") 
       nicknameToMiddleMatches = merge(nicknameToMiddleMatchToVoterFile,allmatches) 
@@ -164,7 +166,6 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
         }
         allmatchesWithNicknamesScored= uniqueMatches
       }
-      browser()
       #
       # double check 
       #
@@ -202,17 +203,22 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     nameMatches = merge(merge(namesAndVoterMatches,firstNameScore),lastNameScore)
     
     
-    
+    nameMatches$nickNameScore[is.na(nameMatches$nickNameScore)] = firstNameMismatchScore
     
     nameMatches$firstNameScore[which(nameMatches$FIRST_NAME != nameMatches$Name.First)] = 
       nameMatches$nickNameScore[which(nameMatches$FIRST_NAME != nameMatches$Name.First)]
     
-    nameMatches$lastNameScore[which(nameMatches$LAST_NAME != nameMatches$Name.Last)] = lastNamePenalty 
+    nameMatches$lastNameScore[which(nameMatches$LAST_NAME != nameMatches$Name.Last)] = lastNameMismatchScore 
     
+    interestingColumns = c(  "Name.First", "FIRST_NAME" ,"Name.Last", "LAST_NAME",   "Name.Middle",  "MIDDLE_NAME"  , 
+                             "firstNameScore"  ,      "lastNameScore"  ,   "SOS_VOTERID",
+                            "TriplerID"  )
+    View(nameMatches[,interestingColumns])
     #
-    #  This is irrelevant because the nickname score is always 10 
+    #  This is irrelevant because the nickname score is always 10 - not true when 
+    #  nickname checking is turned on - But I fixed this above line 210 "= firstNameMismatchScore"
     #
-    nameMatches$firstNameScore[which(is.na(nameMatches$firstNameScore))] = firstNamePenalty 
+    nameMatches$firstNameScore[which(is.na(nameMatches$firstNameScore))] = firstNameMismatchScore 
     
     # middleNameFullMatchScore = .01 
     middleInitialMatchScore = .1 
@@ -280,8 +286,6 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     
     nameMatches$suffixScore[which(SuffixOnBoth)] = suffixMismatchPenalty 
     nameMatches$suffixScore[which(SuffixOnBoth & suffixMatch)] = suffixMatchScore
-    
-    
     
     
     # BirthYearMismatchScore = 500
@@ -390,6 +394,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     addressPartialMatchScore = .1 # if either the street number or street name is right
     addressFullMatchScore = .001 # If we have a perfect match, we certainly want to accept a bad first or last name 
     
+    
     if ( is.na(houseNumField)) { 
       nameMatches$addressScore = 1
     } else { 
@@ -455,8 +460,13 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
                                        "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore"),
                                      colnames(nameMatches) ) 
     
-    # browser()
+    
     # View( nameMatches[,interestingColumns])
+
+    interestingColumns = c(  "Name.First", "FIRST_NAME" ,"Name.Last", "LAST_NAME",   "Name.Middle",  "MIDDLE_NAME"  , 
+                             "firstNameScore"  ,      "lastNameScore"  ,   "SOS_VOTERID",
+                             "TriplerID"  )
+    View(nameMatches[,interestingColumns])
     return <- nameMatches
     
   } else {

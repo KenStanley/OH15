@@ -11,7 +11,7 @@ findFirstAndSecondBestTripleeMatches <- function( allNicknames=allNicknames, vot
   
   source("matchTripleesToVoterFile.R")
   
-  tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First1", "Last1","MI1","Suffix1" )
+  tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First1", "Last1","MI1","Suffix1", "Canvass.Precinct" )
   triplees1 = triplers[,tripleeCommonColnames ] %>%  dplyr::rename( Tripler.First = Name.First )  %>% dplyr::rename( Tripler.Last = Name.Last ) %>%
     dplyr::rename( Name.First = First1)  %>% dplyr::rename( Name.Last = Last1) %>% 
     dplyr::rename( Name.Middle = MI1)  %>% dplyr::rename( Name.Suffix = Suffix1)
@@ -30,7 +30,7 @@ findFirstAndSecondBestTripleeMatches <- function( allNicknames=allNicknames, vot
 
 
     
-    tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First2", "Last2","MI2","Suffix2" )
+    tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First2", "Last2","MI2","Suffix2", "Canvass.Precinct" )
     triplees2 = triplers[,tripleeCommonColnames ] %>%  dplyr::rename( Tripler.First = Name.First )  %>% dplyr::rename( Tripler.Last = Name.Last ) %>%
       dplyr::rename( Name.First = First2)  %>% dplyr::rename( Name.Last = Last2) %>% 
       dplyr::rename( Name.Middle = MI2)  %>% dplyr::rename( Name.Suffix = Suffix2)
@@ -49,7 +49,7 @@ findFirstAndSecondBestTripleeMatches <- function( allNicknames=allNicknames, vot
     
 
     
-    tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First3", "Last3","MI3","Suffix3" )
+    tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First3", "Last3","MI3","Suffix3", "Canvass.Precinct" )
     triplees3 = triplers[,tripleeCommonColnames ] %>%  dplyr::rename( Tripler.First = Name.First )  %>% dplyr::rename( Tripler.Last = Name.Last ) %>%
       dplyr::rename( Name.First = First3)  %>% dplyr::rename( Name.Last = Last3) %>% 
       dplyr::rename( Name.Middle = MI3)  %>% dplyr::rename( Name.Suffix = Suffix3)

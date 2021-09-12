@@ -242,6 +242,32 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
     matchesWithoutAddresses = distinct(rbind(matchesWithoutAddresses,
                                              firstnameToMiddleAndLastnameMatch)) # 5963 = 142 more than 5821 or 321 more than 5642 
     
+    #
+    #  Here we are going to add matches that we find because of a precinct and 
+    #  first name or a precinct and last name match 
+    #
+    
+    if( "Canvass.Precinct" %in% colnames(namesToMatch )) {
+      
+      oldmatchesWithoutAddresses = matchesWithoutAddresses
+      
+      firstAndPrecinctMatch = merge(namesToMatch,masterList,
+                                    by.x=c( "Name.First", "Canvass.Precinct" ),
+                                    by.y=c("FIRST_NAME","PRECINCT_NAME"))[,c(IDfield,voterFileID)]
+      
+      
+      lastAndPrecinctMatch = merge(namesToMatch,masterList,
+                                   by.x=c( "Name.Last", "Canvass.Precinct" ),
+                                   by.y=c("LAST_NAME","PRECINCT_NAME"))[,c(IDfield,voterFileID)]
+      
+      
+      
+      matchesWithoutAddresses = distinct(rbind(matchesWithoutAddresses,
+                                               firstAndPrecinctMatch, 
+                                               lastAndPrecinctMatch)) 
+      
+    }
+    
     if (is.na(houseNumField)) {
       allmatches = distinct(matchesWithoutAddresses)
       
@@ -291,7 +317,8 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
                                                 birthYearField=birthYearField,
                                                 birthMonthField=birthMonthField,
                                                 birthDayField=birthDayField,
-                                                houseNumField=houseNumField) 
+                                                houseNumField=houseNumField,
+                                                MatchNicknames = TRUE) 
     
     
     interestingColumns = c("LAST_NAME" , "FIRST_NAME" , "MIDDLE_NAME" ,
