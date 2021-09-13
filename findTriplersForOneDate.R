@@ -152,7 +152,10 @@ setdiff( colnames(triplers ), expectedColumns)
 triplers$new = is.na(triplers$Tripler.in.voter.database) | ( nchar(triplers$Tripler.in.voter.database) < 5 ) 
 triplersOut = findFirstAndSecondBestMatches( allNicknames=allNicknames, 
                                              voterFile=FranklinVoterFile,
-                                             triplers = triplers [which(triplers$new),])
+                                             triplers = triplers [which(triplers$new),],
+                                             cutoffScoreToIncludeInTheTopList = 0.1, 
+                                             cutoffScoreToIncludeInTheSecondaryList = 100, 
+                                             cutoffMultiple = 1000  )
 
 triplerColumns = colnames(triplers )
 

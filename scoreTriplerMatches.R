@@ -395,7 +395,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
     addressMismatchPenalty = 10 # We want to find people even if they aren't at the right address 
     addressPartialMatchScore = .1 # if either the street number or street name is right
     addressFullMatchScore = .001 # If we have a perfect match, we certainly want to accept a bad first or last name 
-    
+    precinctMatchScore = .1 
     
     if ( is.na(houseNumField)) { 
       nameMatches$addressScore = 1
@@ -421,7 +421,10 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
       nameMatches$addressScore[which( nameMatches$houseNumMatch & nameMatches$streetNameMatch)] = addressFullMatchScore
       
     }
-    
+    canvassedPrecinct = nameMatches$Canvass.Precinct == nameMatches$PRECINCT_NAME
+    # stopifnot ( sum(canvassedPrecinct , na.rm=TRUE ) > 5 )
+    nameMatches$addressScore[ which(canvassedPrecinct )] = pmin( 
+      nameMatches$addressScore[ which(canvassedPrecinct )], precinctMatchScore )
     if ( !is.na(birthYearField)) {
       
       

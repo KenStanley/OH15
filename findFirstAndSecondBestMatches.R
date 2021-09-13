@@ -3,7 +3,9 @@
 #  
 
 findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile=RichlandVoterFile, 
-                                           triplers=triplers, oneDateSheet ) {
+                                           triplers=triplers, oneDateSheet, cutoffScoreToIncludeInTheTopList = 0.25, 
+                                           cutoffScoreToIncludeInTheSecondaryList = 100, 
+                                           cutoffMultiple = 1000  ) {
   
   
   
@@ -31,9 +33,7 @@ findFirstAndSecondBestMatches <- function( allNicknames= allNicknames, voterFile
                                              facebook=FALSE,
                                              cutoffScore=1e10) 
   
-  cutoffScoreToIncludeInTheTopList = 0.25 
-  cutoffScoreToIncludeInTheSecondaryList = 100 
-  cutoffMultiple = 1000 
+  
   
   June30_2021 = as.Date("2021-06-30")
   matchedFriends$age =   floor( as.integer(June30_2021  - as.Date(matchedFriends[,"DATE_OF_BIRTH"]))  / 365.25 )
