@@ -138,7 +138,7 @@ range_write_nice <- function(data, ss=NULL, sheet=NULL, range=NULL, initWaitTime
     
     if(typeof(result)=="character") {
       if(result=="resourceExhausted"){
-        browser() # I want to see if the error gives me useful information
+        # browser() # I want to see if the error gives me useful information it didn't 
         if(waitTime>maxWaitTime) {
           return("ERROR: Max wait time exceeded, exiting without range write")
         } else {
