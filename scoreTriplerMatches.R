@@ -462,7 +462,7 @@ scoreTriplerMatches <-function( allmatches,  namesToMatch, voterFile, allNicknam
                                        "streetNameScore", "addressScore",   "houseNumMatch"  , "streetNameMatch"   ,     
                                        "nameAndBirthScore",  
                                        "Name.First","FIRST_NAME",
-                                       "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore"),
+                                       "Name.Last", "LAST_NAME","firstNameScore","lastNameScore","nickNameScore","addressScore"),
                                      colnames(nameMatches) ) 
     
     

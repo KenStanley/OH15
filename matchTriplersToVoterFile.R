@@ -421,7 +421,6 @@ matchTriplersToVoterFile <- function(namesToMatch, masterList, allNicknames,
       if ( !allowMultipleNameMatches) stopifnot( nrow(bestMatchesByBoth)  == length(unique(bestMatchesByBoth[,IDfield])))
       
       
-      
       return <- bestMatchesByBoth[which(bestMatchesByBoth$totalScore < cutoffScore),] # This cutoff Score test appears to be redundant
     }else {
       return <- allMatchesWithScores 

@@ -88,7 +88,7 @@ if ( clearData ) {
   library(dplyr)
   library(tictoc)
   library(magrittr)
-  smallEqualsFast = TRUE 
+  smallEqualsFast = FALSE 
   if (smallEqualsFast) {
     load(file="SmallerVoterFile.rds",verbose = TRUE)
     FranklinVoterFile=SmallerVoterFile
@@ -225,7 +225,6 @@ SecondRange= "S3"
 # range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[1:lastColumnInFirstSet]], 
 #                  ss=TriplersSS, sheet=thisDateSheet, range=FirstRange, col_names=TRUE)
 
-browser()
 range_write_nice(triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
                  ss=TriplersSS, sheet=thisDateSheet, range=SecondRange, col_names=FALSE)
 

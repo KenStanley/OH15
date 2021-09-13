@@ -28,8 +28,7 @@ findFirstAndSecondBestTripleeMatches <- function( allNicknames=allNicknames, vot
   matchedFriends1B = matchedFriends1A[ ,c("TriplerIDout", "Triplee1IDNew", "Triplee1.in.voter.databaseNew", 
                                           "Precinct1New", "SecondTriplee1New")]
 
-
-    
+ 
     tripleeCommonColnames = c ( "TriplerID" , "Name.First", "Name.Last","First2", "Last2","MI2","Suffix2", "Canvass.Precinct" )
     triplees2 = triplers[,tripleeCommonColnames ] %>%  dplyr::rename( Tripler.First = Name.First )  %>% dplyr::rename( Tripler.Last = Name.Last ) %>%
       dplyr::rename( Name.First = First2)  %>% dplyr::rename( Name.Last = Last2) %>% 
@@ -71,14 +70,14 @@ findFirstAndSecondBestTripleeMatches <- function( allNicknames=allNicknames, vot
   # merge them all together 
   #
   intersect( colnames(matchedFriends1B) , colnames(matchedFriends3B)  )
-  matchedFriends1and2 = merge( matchedFriends1B, matchedFriends2B, by="TriplerIDout")
-  matchedFriends1_2and3 = merge( matchedFriends1and2, matchedFriends3B, by="TriplerIDout")
+  matchedFriends1and2 = merge( matchedFriends1B, matchedFriends2B, all=TRUE, by="TriplerIDout")
+  matchedFriends1_2and3 = merge( matchedFriends1and2, matchedFriends3B, all=TRUE, by="TriplerIDout")
   
   columnsToReturn = paste(c(  "Triplee1ID" , "Triplee1.in.voter.database", "Precinct1" ,
                               "Triplee2ID" , "Triplee2.in.voter.database", "Precinct2" ,                
                               "Triplee3ID" , "Triplee3.in.voter.database", "Precinct3" ,            
                               "SecondTriplee1", "SecondTriplee2"  , "SecondTriplee3"   ),"New", sep="") 
   
-  
+ 
   return <- matchedFriends1_2and3
 }
