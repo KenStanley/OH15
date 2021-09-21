@@ -39,3 +39,6 @@ vignettes/*.pdf
 .Renviron
 
 directory_path.R
+*.rds
+19DEP2021
+21SEP2021

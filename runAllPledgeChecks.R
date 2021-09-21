@@ -11,7 +11,7 @@ library(dplyr)
 library(tictoc)
 library(magrittr)
 
-recreateVoterFile = FALSE 
+recreateVoterFile = TRUE 
 tic()
 tic()
 if ( recreateVoterFile ) {
@@ -77,7 +77,7 @@ if ( recreateVoterFile ) {
 }
 toc()
 tic()
-
+browser()
 clearData = FALSE
 if ( clearData ) {
   rm ( list=ls())
@@ -116,6 +116,15 @@ load(file=file.path(data_directory,"allNicknames.rdata"),verbose=TRUE)
 
 source( "findTriplersForOneDate.R")
 
-findTriplersForOneDate(  TriplersSS=TriplersSS, thisDateSheet=thisDateSheet)
+allVoteTriplingPledgeSheetsSS = "https://docs.google.com/spreadsheets/d/1aIFHWl9R4ZCp09UhGgXpVGNtXv-wKBrcagofJVaN1a8/edit#gid=0"
+sheetName = "listOfPledgeSheets"
+
+allVoteTriplingPledgeSheets = read_sheet_nice( ss=allVoteTriplingPledgeSheetsSS, sheet=sheetName )
+
+for ( sheetNumber in 1:nrow(allVoteTriplingPledgeSheets))  {
+  findTriplersForOneDate(  TriplersSS=allVoteTriplingPledgeSheets$`Spreadsheet URL`,
+                           thisDateSheet=allVoteTriplingPledgeSheets$`Sheet name`,
+                           SSname=allVoteTriplingPledgeSheets$`Spreadsheet name`)
+}
 
 toc()

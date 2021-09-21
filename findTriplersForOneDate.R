@@ -7,7 +7,8 @@
 #  
 #
 
-findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
+findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
+                                    SSname=NULL) {
   
   
   triplers = read_sheet_nice( ss=TriplersSS, sheet=thisDateSheet, skip=0)
@@ -127,7 +128,7 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
   
   triplersWithNewTriplersAndTriplees$cleanPhone = as.numeric( gsub( "[^0-9]", "", triplersWithNewTriplersAndTriplees$Phone ) ) 
   
-   
+  
   triplersWithNewTriplersAndTriplees$triplerInOH15 = triplersWithNewTriplersAndTriplees$Precinct == toupper(triplersWithNewTriplersAndTriplees$Precinct)
   
   triplersWithNewTriplersAndTriplees$commitToVote = ( triplersWithNewTriplersAndTriplees$triplerInOH15 & 
@@ -138,7 +139,7 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
     ( nchar(triplersWithNewTriplersAndTriplees$First2) > 2 ) &
     ( nchar(triplersWithNewTriplersAndTriplees$First3) > 2 ) 
   
-   
+  
   triplersWithNewTriplersAndTriplees$triplerFound = nchar(triplersWithNewTriplersAndTriplees$Precinct) > 2  & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$triple1Found = nchar(triplersWithNewTriplersAndTriplees$Precinct1) > 2 & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$triple2Found = nchar(triplersWithNewTriplersAndTriplees$Precinct2) > 2 & triplersWithNewTriplersAndTriplees$commitToVote
@@ -164,11 +165,11 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
     triplersWithNewTriplersAndTriplees$triple3InOH15
   
   
-  triplersWithNewTriplersAndTriplees$numTriplee1 = ( nchar(triplersWithNewTriplersAndTriplees$First1 ) > 2 ) 
+  triplersWithNewTriplersAndTriplees$numTriplee1 = ( nchar(triplersWithNewTriplersAndTriplees$First1 ) > 2 ) & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$numTriplee1[is.na(triplersWithNewTriplersAndTriplees$numTriplee1)] = 0 
-  triplersWithNewTriplersAndTriplees$numTriplee2 = ( nchar(triplersWithNewTriplersAndTriplees$First2 ) > 2 ) 
+  triplersWithNewTriplersAndTriplees$numTriplee2 = ( nchar(triplersWithNewTriplersAndTriplees$First2 ) > 2 ) & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$numTriplee2[is.na(triplersWithNewTriplersAndTriplees$numTriplee2)] = 0 
-  triplersWithNewTriplersAndTriplees$numTriplee3 = ( nchar(triplersWithNewTriplersAndTriplees$First3 ) > 2 ) 
+  triplersWithNewTriplersAndTriplees$numTriplee3 = ( nchar(triplersWithNewTriplersAndTriplees$First3 ) > 2 ) & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$numTriplee3[is.na(triplersWithNewTriplersAndTriplees$numTriplee3)] = 0 
   
   triplersWithNewTriplersAndTriplees$numTriples = triplersWithNewTriplersAndTriplees$numTriplee1 + 
@@ -180,6 +181,9 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
   
   triplersWithNewTriplersAndTripleesSansTop = triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),]
   triplersWithNewTriplersAndTripleesSansTop = triplersWithNewTriplersAndTriplees[2:14,]
+  
+  
+  print( paste("\n\n", SSname))
   print( paste( "numPledges =", sum(nchar(triplersWithNewTriplersAndTripleesSansTop$Name.First)>2 ,na.rm=TRUE)))
   print( paste( "numCTVs =", sum(triplersWithNewTriplersAndTripleesSansTop$commitToVote,na.rm=TRUE)))
   print( paste( "numFullTriplers =", sum(triplersWithNewTriplersAndTripleesSansTop$fullTriplers,na.rm=TRUE)))
@@ -194,7 +198,8 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL ) {
   
   print( paste( "numTripleesFoundIn UA 1-A =", sum(triplersWithNewTriplersAndTripleesSansTop$numTripleesInOH15[
     which(triplersWithNewTriplersAndTripleesSansTop$Precinct=="UA 1-A")],na.rm=TRUE)))
+  print( paste( SSname))
   
-
-   
+  write_sheet_nice( triplersWithNewTriplersAndTripleesSansTop, ss=allTriplingPledgeSheetsSS, sheet="finalCounts")
+  
 }
