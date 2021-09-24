@@ -15,7 +15,7 @@
 
 #   update the voted flags
 
-redo = FALSE 
+redo = TRUE 
 tic()
 if ( redo) {
   #  This has not been tested - but shoudl work 
@@ -54,6 +54,8 @@ if ( redo) {
                                                                      by="PRECINCT_NAME"] )
   
   columbusVoters = FranklinVoterFile[ which( grepl("COLS",FranklinVoterFile$PRECINCT_NAME)),]
+  
+  browser()
   
   save( votersInTargetPrecincts, file="votersInTargetPrecincts.rds")
 }
