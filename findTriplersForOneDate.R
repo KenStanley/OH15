@@ -7,8 +7,10 @@
 #  
 #
 
+
 findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
-                                    SSname=NULL) {
+                                    SSname=NULL, 
+                                    inPrecinctRandomization = NULL) {
   
   
   triplers = read_sheet_nice( ss=TriplersSS, sheet=thisDateSheet, skip=0)
@@ -139,7 +141,6 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
     ( nchar(triplersWithNewTriplersAndTriplees$First2) > 2 ) &
     ( nchar(triplersWithNewTriplersAndTriplees$First3) > 2 ) 
   
-  
   triplersWithNewTriplersAndTriplees$triplerFound = nchar(triplersWithNewTriplersAndTriplees$Precinct) > 2  & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$triple1Found = nchar(triplersWithNewTriplersAndTriplees$Precinct1) > 2 & triplersWithNewTriplersAndTriplees$commitToVote
   triplersWithNewTriplersAndTriplees$triple2Found = nchar(triplersWithNewTriplersAndTriplees$Precinct2) > 2 & triplersWithNewTriplersAndTriplees$commitToVote
@@ -176,11 +177,10 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
     triplersWithNewTriplersAndTriplees$numTriplee2 + 
     triplersWithNewTriplersAndTriplees$numTriplee3
   
-  return <- triplersWithNewTriplersAndTriplees
   
   
   triplersWithNewTriplersAndTripleesSansTop = triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),]
-  triplersWithNewTriplersAndTripleesSansTop = triplersWithNewTriplersAndTriplees[2:14,]
+  # triplersWithNewTriplersAndTripleesSansTop = triplersWithNewTriplersAndTriplees[2:14,]
   
   
   print( paste("\n\n", SSname))
@@ -193,13 +193,16 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
   print( paste( "numTripleesFoundInOh15 =", sum(triplersWithNewTriplersAndTripleesSansTop$numTripleesInOH15[1:14],na.rm=TRUE)))
   
   
-  print( paste( "numTripleesFoundIn COLS 33-D =", sum(triplersWithNewTriplersAndTripleesSansTop$numTripleesInOH15[
-    which(triplersWithNewTriplersAndTripleesSansTop$Precinct=="COLS 33-D")],na.rm=TRUE)))
+  print( paste( "numTripleesFoundIn COLS 02-F =", sum(triplersWithNewTriplersAndTripleesSansTop$numTripleesInOH15[
+    which(triplersWithNewTriplersAndTripleesSansTop$Precinct=="COLS 02-F")],na.rm=TRUE)))
   
   print( paste( "numTripleesFoundIn UA 1-A =", sum(triplersWithNewTriplersAndTripleesSansTop$numTripleesInOH15[
     which(triplersWithNewTriplersAndTripleesSansTop$Precinct=="UA 1-A")],na.rm=TRUE)))
   print( paste( SSname))
   
   write_sheet_nice( triplersWithNewTriplersAndTripleesSansTop, ss=allTriplingPledgeSheetsSS, sheet="finalCounts")
+  
+  return <- triplersWithNewTriplersAndTriplees
+  
   
 }

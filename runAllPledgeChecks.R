@@ -3,15 +3,15 @@
 #
 
 allTriplingPledgeSheetsSS = "https://docs.google.com/spreadsheets/d/1aIFHWl9R4ZCp09UhGgXpVGNtXv-wKBrcagofJVaN1a8/edit#gid=0"
-setwd("/Users/kenstanley/Google Drive/Rcode/mansfield21Rcode")
-setwd("/Users/kenstanley/Google Drive/Rcode/OH15Rcode/OH15")
+# setwd("/Users/kenstanley/Google Drive/Rcode/mansfield21Rcode")
+setwd("/Users/kenstanley/Google Drive/Rcode2019Mac/OH15Rcode/OH15")
 source("directory_path.R")
 
 library(dplyr)
 library(tictoc)
 library(magrittr)
 
-recreateVoterFile = TRUE 
+recreateVoterFile = FALSE 
 tic()
 tic()
 if ( recreateVoterFile ) {
@@ -77,7 +77,6 @@ if ( recreateVoterFile ) {
 }
 toc()
 tic()
-browser()
 clearData = FALSE
 if ( clearData ) {
   rm ( list=ls())
@@ -85,7 +84,7 @@ if ( clearData ) {
   library(dplyr)
   library(tictoc)
   library(magrittr)
-  smallEqualsFast = TRUE 
+  smallEqualsFast = FALSE 
   if (smallEqualsFast) {
     load(file="SmallerVoterFile.rds",verbose = TRUE)
     FranklinVoterFile=SmallerVoterFile
@@ -120,11 +119,16 @@ allVoteTriplingPledgeSheetsSS = "https://docs.google.com/spreadsheets/d/1aIFHWl9
 sheetName = "listOfPledgeSheets"
 
 allVoteTriplingPledgeSheets = read_sheet_nice( ss=allVoteTriplingPledgeSheetsSS, sheet=sheetName )
+load(file="inPrecinctRandomization.rds", verbose=TRUE )
 
 for ( sheetNumber in 1:nrow(allVoteTriplingPledgeSheets))  {
+  print( paste( Sys.time(), "TOP sheetNumber=", sheetNumber))
+  
   findTriplersForOneDate(  TriplersSS=allVoteTriplingPledgeSheets$`Spreadsheet URL`,
                            thisDateSheet=allVoteTriplingPledgeSheets$`Sheet name`,
-                           SSname=allVoteTriplingPledgeSheets$`Spreadsheet name`)
+                           SSname=allVoteTriplingPledgeSheets$`Spreadsheet name`,
+                           inPrecinctRandomization = inPrecinctRandomization)
+  print( paste( Sys.time(), "BOT sheetNumber=", sheetNumber))
 }
 
 toc()

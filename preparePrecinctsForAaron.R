@@ -120,7 +120,8 @@ precinctInfoII = group_by( leanDemHousehodlsInTargPrec, PRECINCT_NAME, CONGRESSI
 
 
 
-targetPreinctsWithHouseholdInfoII = merge(precinctInfoII, targetPrecincts[,c("PRECINCT_NAME" , "mappableAddress",  "fractionInaccessible" ) ], 
+targetPrecinctsWithHouseholdInfoII = merge(precinctInfoII, targetPrecincts[,c("PRECINCT_NAME" , "mappableAddress",  "fractionInaccessible" ) ], 
                                         by="PRECINCT_NAME")
 
-write_sheet_nice(targetPreinctsWithHouseholdInfoII, ss=targetPrecinctSS, sheet="allInfoForRandomizationB")
+browser()
+write_sheet_nice(targetPrecinctsWithHouseholdInfoII, ss=targetPrecinctSS, sheet="allInfoForRandomizationB")
