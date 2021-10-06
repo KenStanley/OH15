@@ -121,7 +121,12 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
   # range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[1:lastColumnInFirstSet]], 
   #                  ss=TriplersSS, sheet=thisDateSheet, range=FirstRange, col_names=TRUE)
   
-  range_write_nice(triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
+  browser()
+  View(triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[c(1,firstColumnInSecondSet:length(expectedColumns))]])
+  
+  triplersWithNewTriplersAndTripleesSortedByTriplerID = triplersWithNewTriplersAndTriplees %>%
+    arrange(TriplerID) # I don't actually think this is necessary
+  range_write_nice(triplersWithNewTriplersAndTripleesSortedByTriplerID[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[firstColumnInSecondSet:length(expectedColumns)]], 
                    ss=TriplersSS, sheet=thisDateSheet, range=SecondRange, col_names=FALSE)
   
   
