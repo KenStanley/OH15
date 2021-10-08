@@ -121,7 +121,6 @@ findTriplersForOneDate <- function( TriplersSS=NULL, thisDateSheet=NULL,
   # range_write_nice(triplersWithNewTriplersAndTriplees[,expectedColumns[1:lastColumnInFirstSet]], 
   #                  ss=TriplersSS, sheet=thisDateSheet, range=FirstRange, col_names=TRUE)
   
-  browser()
   View(triplersWithNewTriplersAndTriplees[2:nrow(triplersWithNewTriplersAndTriplees),expectedColumns[c(1,firstColumnInSecondSet:length(expectedColumns))]])
   
   triplersWithNewTriplersAndTripleesSortedByTriplerID = triplersWithNewTriplersAndTriplees %>%

@@ -124,7 +124,7 @@ load(file="inPrecinctRandomization.rds", verbose=TRUE )
 for ( sheetNumber in 1:nrow(allVoteTriplingPledgeSheets))  {
   print( paste( Sys.time(), "TOP sheetNumber=", sheetNumber))
   
-  findTriplersForOneDate(  TriplersSS=allVoteTriplingPledgeSheets$`Spreadsheet URL`,
+  triplersForThisDate = findTriplersForOneDate(  TriplersSS=allVoteTriplingPledgeSheets$`Spreadsheet URL`,
                            thisDateSheet=allVoteTriplingPledgeSheets$`Sheet name`,
                            SSname=allVoteTriplingPledgeSheets$`Spreadsheet name`,
                            inPrecinctRandomization = inPrecinctRandomization)
